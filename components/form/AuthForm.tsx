@@ -12,7 +12,7 @@ import {
     Form
 } from "@/components/ui/form"
 import { authFormSchema } from '@/lib/utils'
-import CustomInput from './form/CustomInput'
+import CustomInput from './CustomInput'
 import { Loader2 } from 'lucide-react'
 
 
@@ -21,9 +21,11 @@ const AuthForm = ({ type }: { type: string }) => {
     const [user, setUser] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
 
+    const formSchema = authFormSchema(type);
+
     // 1. Define your form.
-    const form = useForm<z.infer<typeof authFormSchema>>({
-        resolver: zodResolver(authFormSchema),
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
         defaultValues: {
             email: "",
             password: ""
@@ -31,7 +33,7 @@ const AuthForm = ({ type }: { type: string }) => {
     })
 
     // 2. Define a submit handler.
-    function onSubmit(values: z.infer<typeof authFormSchema>) {
+    function onSubmit(values: z.infer<typeof formSchema>) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
         setIsLoading(true)
@@ -80,6 +82,61 @@ const AuthForm = ({ type }: { type: string }) => {
                     <>
                         <Form {...form}>
                             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+
+                                {type === 'sign-up' && (
+                                    <>
+                                        <div className='flex gap-4'>
+                                            <CustomInput
+                                                name="firstName"
+                                                label='First Name'
+                                                placeholder='Enter your first name'
+                                                control={form.control}
+                                            />
+                                            <CustomInput
+                                                name="lastName"
+                                                label='Last Name'
+                                                placeholder='Enter your last name'
+                                                control={form.control}
+                                            />
+                                        </div>
+
+                                        <CustomInput
+                                            name="address1"
+                                            label='Address'
+                                            placeholder='Enter your specific address'
+                                            control={form.control}
+                                        />
+                                        <div className='flex gap-4'>
+                                            <CustomInput
+                                                name="state"
+                                                label='State'
+                                                placeholder='Example: NY'
+                                                control={form.control}
+                                            />
+                                            <CustomInput
+                                                name="postalCode"
+                                                label='Postal Code'
+                                                placeholder='Example: 11101'
+                                                control={form.control}
+                                            />
+                                        </div>
+                                        <div className='flex gap-4'>
+                                            <CustomInput
+                                                name="dateOfBirth"
+                                                label='Date of Birth'
+                                                placeholder='YYYY-MM-DD'
+                                                control={form.control}
+                                            />
+                                            <CustomInput
+                                                name="ssn"
+                                                label='SSN'
+                                                placeholder='Example: 1234'
+                                                control={form.control}
+                                            />
+                                        </div>
+                                    </>
+                                )}
+
                                 <CustomInput
                                     name="email"
                                     label='email'
